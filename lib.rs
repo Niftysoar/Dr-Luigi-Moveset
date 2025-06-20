@@ -65,7 +65,7 @@ extern "C" fn mods_mounted(_ev: arcropolis_api::Event) {
         clone_from_ui_chara_id: Some(hash40("ui_chara_luigi")),
         name_id: StringType::Overwrite(CStrCSK::new("luigid")),
         ui_series_id: Hash40Type::Overwrite(hash40("ui_series_mario")),
-        //disp_order: SignedByteType::Overwrite(82),
+        disp_order: SignedByteType::Overwrite(19),
         is_dlc:BoolType::Overwrite(false),
         is_patch: BoolType::Overwrite(false),
         color_num: UnsignedByteType::Overwrite(color_num as u8),

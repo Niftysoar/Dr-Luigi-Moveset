@@ -58,10 +58,40 @@ unsafe extern "C" fn expression_entryl(agent: &mut L2CAgentBase) {
     }
 }
 
+unsafe extern "C" fn effect_appealsr(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+		frame(fighter.lua_state_agent, 50.0);
+		if macros::is_excute(fighter) {
+			macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
+			macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+			macros::LANDING_EFFECT(fighter, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+		}
+}	
+unsafe extern "C" fn sound_appealsr(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    	frame(fighter.lua_state_agent, 10.0);
+		if macros::is_excute(fighter) {
+			macros::PLAY_SE(fighter, Hash40::new("vc_luigi_appeal02"));
+		}
+        frame(fighter.lua_state_agent, 11.0);
+		if macros::is_excute(fighter) {
+			macros::PLAY_SE(fighter, Hash40::new("se_luigi_jump03"));
+		}
+        frame(fighter.lua_state_agent, 50.0);
+		if macros::is_excute(fighter) {
+			macros::PLAY_SE(fighter, Hash40::new("se_common_landing_soil"));
+		}
+}
+
 pub fn install() {
     Agent::new("luigi")
         .sound_acmd("sound_entryr_luigid", sound_entryr, Priority::Low)  
-        .sound_acmd("sound_entryl_luigid", sound_entryl, Priority::Low)   
+        .sound_acmd("sound_entryl_luigid", sound_entryl, Priority::Low)
+        .expression_acmd("expression_entryl_luigid", expression_entryl, Priority::Low)
+        .expression_acmd("expression_entryr_luigid", expression_entryr, Priority::Low) 
+        
+        .effect_acmd("effect_appealsr_luigid", effect_appealsr, Priority::Low)
+        .sound_acmd("sound_appealsr_luigid", sound_appealsr, Priority::Low)
 
         .install();
 }
