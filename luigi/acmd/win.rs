@@ -51,11 +51,11 @@ unsafe extern "C" fn sound_win1(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_luigi_special_n01"));
     }
-    frame(agent.lua_state_agent, 52.0);
+    frame(agent.lua_state_agent, 56.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE_NO_3D(agent, Hash40::new("vc_luigi_damage02"));
     }
-    frame(agent.lua_state_agent, 105.0);
+    frame(agent.lua_state_agent, 125.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE_NO_3D(agent, Hash40::new("vc_luigi_appeal03"));
     }
@@ -64,6 +64,16 @@ unsafe extern "C" fn sound_win1(agent: &mut L2CAgentBase) {
 // ********************
 // WiN 2
 // ********************
+unsafe extern "C" fn sound_win2(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 128.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("vc_luigi_heavyget"));
+    }
+    frame(agent.lua_state_agent, 190.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE_NO_3D(agent, Hash40::new("vc_luigi_jump01"));
+    }
+}
 
 
 // ********************
@@ -75,6 +85,8 @@ pub fn install() {
         .game_acmd("game_win1_luigid", game_win1, Priority::Low)
         .effect_acmd("effect_win1_luigid", effect_win1, Priority::Low) 
         .sound_acmd("sound_win1_luigid", sound_win1, Priority::Low) 
+
+        .sound_acmd("sound_win2_luigid", sound_win2, Priority::Low)
 
         .install();
 }

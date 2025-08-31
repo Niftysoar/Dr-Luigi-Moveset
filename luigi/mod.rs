@@ -78,188 +78,6 @@ unsafe extern "C" fn luigi_throw_end(fighter: &mut L2CFighterCommon) -> L2CValue
     fighter.status_end_Throw()
 }
 
-// Final
-// unsafe extern "C" fn final_end(fighter: &mut L2CAgentBase) -> L2CValue {
-//     // Fire Mario's huge capsule article (e.g., giant fireball or cinematic projectile)
-//     let article_id = *FIGHTER_MARIOD_GENERATE_ARTICLE_HUGECAPSULE;
-//     let target = *ARTICLE_OPE_TARGET_ALL;
-//     let is_shoot = false;
-
-//     ArticleModule::shoot(fighter.module_accessor, article_id, target, is_shoot);
-
-//     // Notify event to signal end of Final Smash
-//     notify_event_msc_cmd!(fighter, Hash40::new("final_end"));
-
-//     // Return 0 to signal no special state change
-//     0.into()
-// }
-
-// unsafe extern "C" fn final_main(fighter: &mut L2CAgentBase) -> L2CValue {
-//     // Notify Final Smash activation event
-//     notify_event_msc_cmd!(fighter, Hash40::new("final_start"));
-
-//     // Disable area collisions (probably for cinematic behavior)
-//     AreaModule::set_whole(fighter.module_accessor, false);
-
-//     // Enable status transitions
-//     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT);
-//     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL);
-
-//     let situation = StatusModule::situation_kind(fighter.module_accessor);
-
-//     // Handle air/ground behavior separately
-//     if situation == *SITUATION_KIND_AIR {
-//         // Set to air kinetic and correct position
-//         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
-//         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-
-//         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_FINAL_FLAG_FIRST) {
-//             MotionModule::change_motion(
-//                 fighter.module_accessor,
-//                 Hash40::new("final_air_start"),
-//                 0.0,
-//                 1.0,
-//                 false,
-//                 0.0,
-//                 false,
-//                 false
-//             );
-//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_FINAL_FLAG_FIRST);
-//         } else {
-//             MotionModule::change_motion_inherit_frame(
-//                 fighter.module_accessor,
-//                 Hash40::new("final_air_start"),
-//                 -1.0,
-//                 1.0,
-//                 0.0,
-//                 false,
-//                 false
-//             );
-//         }
-//     } else {
-//         // Ground kinetic and correction
-//         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-//         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-
-//         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_FINAL_FLAG_FIRST) {
-//             MotionModule::change_motion(
-//                 fighter.module_accessor,
-//                 Hash40::new("final_start"),
-//                 0.0,
-//                 1.0,
-//                 false,
-//                 0.0,
-//                 false,
-//                 false
-//             );
-//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_FINAL_FLAG_FIRST);
-//         } else {
-//             MotionModule::change_motion_inherit_frame(
-//                 fighter.module_accessor,
-//                 Hash40::new("final_start"),
-//                 -1.0,
-//                 1.0,
-//                 0.0,
-//                 false,
-//                 false
-//             );
-//         }
-//     }
-
-//     // Set up main loop for Final Smash state
-//     fighter.global_table[0x1C] = L2CValue::Ptr(final_main_loop as *const ());
-
-//     0.into()
-// }
-
-// unsafe extern "C" fn final_main_loop(fighter: &mut L2CAgentBase) -> L2CValue {
-//     // If cancel is NOT enabled, continue through final sequence logic
-//     if !CancelModule::is_enable_cancel(fighter.module_accessor) {
-//         // Check WAIT transition
-//         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) {
-//             // If animation is finished and Mario is on the ground, switch to WAIT
-//             if MotionModule::is_end(fighter.module_accessor)
-//                 && StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND
-//             {
-//                 fighter.change_status(*FIGHTER_STATUS_KIND_WAIT, false.into());
-//             }
-//         }
-//         // Else: check FALL transition
-//         else if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL) {
-//             // If animation is finished and Mario is in the air, switch to FINAL_JUMP_END
-//             if MotionModule::is_end(fighter.module_accessor)
-//                 && StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR
-//             {
-//                 fighter.change_status(*FIGHTER_STATUS_KIND_FINAL_JUMP_END, false.into());
-//             }
-//         }
-//     } else {
-//         // Ground wait check
-//         if L2CFighterCommon::sub_wait_ground_check_common(fighter).get_bool() {
-//             // Air fall check
-//             if !L2CFighterCommon::sub_air_check_fall_common(fighter).get_bool() {
-//                 // Re-enter main transition logic
-//                 return final_main_loop(fighter);
-//             }
-//         }
-//     }
-
-//     0.into()
-// }
-
-// unsafe extern "C" fn final_pre(fighter: &mut L2CAgentBase) -> L2CValue {
-//     // Run shared Final Smash setup (like common cancel disabling)
-//     L2CFighterCommon::sub_status_pre_FinalCommon(fighter);
-
-//     // --- Status Initialization ---
-//     StatusModule::init_settings(
-//         fighter.module_accessor,
-//         *SITUATION_KIND_NONE,
-//         *FIGHTER_KINETIC_TYPE_UNIQ,
-//         *GROUND_CORRECT_KIND_KEEP,
-//         *GROUND_CLIFF_CHECK_KIND_NONE,
-//         false, // cliff check
-//         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG,
-//         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT,
-//         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
-//         0
-//     );
-
-//     // --- Status Properties & Flags ---
-//     FighterStatusModuleImpl::set_fighter_status_data(
-//         fighter.module_accessor,
-//         false,                               // no treaded
-//         *FIGHTER_TREADED_KIND_NO_REAC,       // no reaction
-//         false, false, false,                 // no turn, damage, or cancel
-//         _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_FINAL
-//             | FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK
-//             | FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON, // logging flags
-//         _FIGHTER_STATUS_ATTR_DISABLE_ITEM_INTERRUPT
-//             | FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE
-//             | _FIGHTER_STATUS_ATTR_FINAL,              // status attributes
-//         _FIGHTER_POWER_UP_ATTACK_BIT_FINAL,            // power-up flags
-//         0
-//     );
-
-//     0.into()
-// }
-
-// Fireball Special N
-unsafe extern "C" fn luigi_fireball_game_regular(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.33, 361, 84, 0, 40, 5.4, 0.0, 0.0, 0.0, Some(0.0), Some(-1.7), Some(0.0), 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -2.5, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MARIOD_CAPSULE, *ATTACK_REGION_NONE);
-        AttackModule::enable_safe_pos(agent.module_accessor);
-    }
-    frame(agent.lua_state_agent, 5.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.33, 361, 84, 0, 40, 5.4, 0.0, 0.0, 0.0, Some(0.0), Some(-1.7), Some(0.0), 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -2.5, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MARIOD_CAPSULE, *ATTACK_REGION_NONE);
-    }
-    frame(agent.lua_state_agent, 30.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.33, 361, 84, 0, 40, 5.4, 0.0, 0.0, 0.0, Some(0.0), Some(-1.7), Some(0.0), 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -2, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MARIOD_CAPSULE, *ATTACK_REGION_NONE);
-    }
-}
-
 // Pre
 unsafe extern "C" fn luigi_fireball_start_pre(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(
@@ -324,11 +142,91 @@ unsafe extern "C" fn luigi_fireball_start_main_loop(weapon: &mut L2CWeaponCommon
     return 0.into();
 }
 
+//ORIGINAL CODE GIVEN
+unsafe extern "C" fn specials_ram_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    let stick_y = ControlModule::get_stick_y(boma);
+
+    if stick_y.abs() > 0.2 { //how far the stick is pushed
+        let vertical_influence = 0.4; //should be obvious 
+        let y_add = stick_y * vertical_influence;
+        KineticModule::add_speed(boma, &Vector3f { x: 0.0, y: y_add, z: 0.0 });
+    }
+    
+    smashline::original_status(Main, fighter, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM)(fighter)
+}
+
+
+// WHAT I TRIED TO DO, TAKING INSPIRATION FROM THE PILL SCRIPT
+
+// unsafe extern "C" fn specials_ram_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+//     let boma = fighter.module_accessor;
+
+//     // Run normal Green Missile logic first
+//     let ret = smashline::original_status(Main, fighter, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM)(fighter);
+
+//     // Grab control stick input
+//     let stick_y = ControlModule::get_stick_y(boma);
+//     let facing = PostureModule::lr(boma);
+
+//     // Current velocity
+//     let mut speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+//     let mut speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+
+//     // Constants (inspired by your pill)
+//     let accel_y: f32 = -0.1;
+//     let influence: f32 = 0.5;
+//     let speed_max_y: f32 = 3.5;
+//     let speed_max_total: f32 = 5.5;
+
+//     // Apply stick influence on launch
+//     if MotionModule::frame(boma) <= 1.0 {
+//         speed_y = (stick_y * influence) * 2.0;
+//     } else {
+//         // Add a bit of stick bias continuously
+//         speed_y += stick_y * 0.05;
+//     }
+
+//     // Apply gravity-like pull so he doesn’t stay stuck up
+//     speed_y += accel_y;
+
+//     // Clamp Y speed
+//     if speed_y > speed_max_y { speed_y = speed_max_y; }
+//     if speed_y < -speed_max_y { speed_y = -speed_max_y; }
+
+//     // Clamp total vector
+//     let mag = (speed_x * speed_x + speed_y * speed_y).sqrt();
+//     if mag > speed_max_total {
+//         speed_x *= speed_max_total / mag;
+//         speed_y *= speed_max_total / mag;
+//     }
+
+//     // Apply new velocity
+//     KineticModule::mul_speed(
+//         boma,
+//         &Vector3f { x: speed_x, y: speed_y, z: 0.0 },
+//         *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN
+//     );
+
+//     ret
+}
+
+//ALSO THE STATUS DOESN'T SINGLE SLOT PROPERLY
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe{
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
 
     acmd::install();
 
     Agent::new("luigi")
+    .set_costume(costume.to_vec())
+
         //fighter frame
         .on_line(Main, luigi_frame)
 
@@ -354,11 +252,16 @@ pub fn install() {
     
         .status(End, *FIGHTER_STATUS_KIND_THROW, luigi_throw_end)
 
+        //INSTALLATION
+        .status(Main, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, specials_ram_main)
+
         .install();
 
     Agent::new("luigi_fireball")
-        .game_acmd("game_regular_luigid", luigi_fireball_game_regular, Default)
+    .set_costume(costume.to_vec())
+
         .status(Pre, *WEAPON_LUIGI_FIREBALL_STATUS_KIND_START, luigi_fireball_start_pre)
         .status(Main, *WEAPON_LUIGI_FIREBALL_STATUS_KIND_START, luigi_fireball_start_main)
+        
         .install();
 }
