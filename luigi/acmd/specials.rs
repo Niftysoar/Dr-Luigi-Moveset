@@ -280,6 +280,7 @@ unsafe extern "C" fn game_specialairlw(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("luigi")
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
         .game_acmd("game_specialn_luigid", game_specialn, Priority::Low) 
         .sound_acmd("sound_specialn_luigid", sound_specialn, Priority::Low)  
         .effect_acmd("effect_specialn_luigid", effect_specialn, Priority::Low)  
@@ -298,6 +299,7 @@ pub fn install() {
         .install();
 
     Agent::new("luigi_fireball")
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
         .game_acmd("game_regular_luigid", luigi_fireball_game_regular, Default)
 
         .install();

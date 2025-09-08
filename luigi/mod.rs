@@ -12,6 +12,7 @@ use {
 
 use smashline::Priority::*;
 use super::*;
+use crate::MARKED_COLORS;
 
 mod acmd;
 
@@ -142,90 +143,35 @@ unsafe extern "C" fn luigi_fireball_start_main_loop(weapon: &mut L2CWeaponCommon
     return 0.into();
 }
 
-//ORIGINAL CODE GIVEN
-unsafe extern "C" fn specials_ram_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = fighter.module_accessor;
-    let stick_y = ControlModule::get_stick_y(boma);
-
-    if stick_y.abs() > 0.2 { //how far the stick is pushed
-        let vertical_influence = 0.4; //should be obvious 
-        let y_add = stick_y * vertical_influence;
-        KineticModule::add_speed(boma, &Vector3f { x: 0.0, y: y_add, z: 0.0 });
-    }
-    
-    smashline::original_status(Main, fighter, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM)(fighter)
-}
-
-
-// WHAT I TRIED TO DO, TAKING INSPIRATION FROM THE PILL SCRIPT
-
+// //ORIGINAL CODE GIVEN
 // unsafe extern "C" fn specials_ram_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 //     let boma = fighter.module_accessor;
-
-//     // Run normal Green Missile logic first
-//     let ret = smashline::original_status(Main, fighter, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM)(fighter);
-
-//     // Grab control stick input
+//     KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
 //     let stick_y = ControlModule::get_stick_y(boma);
-//     let facing = PostureModule::lr(boma);
 
-//     // Current velocity
-//     let mut speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-//     let mut speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-
-//     // Constants (inspired by your pill)
-//     let accel_y: f32 = -0.1;
-//     let influence: f32 = 0.5;
-//     let speed_max_y: f32 = 3.5;
-//     let speed_max_total: f32 = 5.5;
-
-//     // Apply stick influence on launch
-//     if MotionModule::frame(boma) <= 1.0 {
-//         speed_y = (stick_y * influence) * 2.0;
-//     } else {
-//         // Add a bit of stick bias continuously
-//         speed_y += stick_y * 0.05;
+//     if stick_y.abs() > 0.2 { //how far the stick is pushed
+//         let vertical_influence = 0.4; //should be obvious 
+//         let y_add = stick_y * vertical_influence;
+//         sv_kinetic_energy::add_speed(fighter.lua_state_agent, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, &Vector3f { x: 0.0, y: y_add, z: 0.0 });
 //     }
+    
+//     smashline::original_status(Main, fighter, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM)(fighter)
+// }
 
-//     // Apply gravity-like pull so he doesn’t stay stuck up
-//     speed_y += accel_y;
-
-//     // Clamp Y speed
-//     if speed_y > speed_max_y { speed_y = speed_max_y; }
-//     if speed_y < -speed_max_y { speed_y = -speed_max_y; }
-
-//     // Clamp total vector
-//     let mag = (speed_x * speed_x + speed_y * speed_y).sqrt();
-//     if mag > speed_max_total {
-//         speed_x *= speed_max_total / mag;
-//         speed_y *= speed_max_total / mag;
-//     }
-
-//     // Apply new velocity
-//     KineticModule::mul_speed(
-//         boma,
-//         &Vector3f { x: speed_x, y: speed_y, z: 0.0 },
-//         *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN
-//     );
-
-//     ret
-}
+// // Clean up energy in original end script WHY ARE MY CHANGES NOT SAVING COME ONNN
+// unsafe extern "C" fn specials_ram_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+//     KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+    
+//     smashline::original_status(End, fighter, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM)(fighter)
+// }
 
 //ALSO THE STATUS DOESN'T SINGLE SLOT PROPERLY
 pub fn install() {
-    let mut costume = &mut Vec::new();
-    unsafe{
-        for i in 0..MARKED_COLORS.len() {
-            if MARKED_COLORS[i] {
-                costume.push(i);
-            }
-        }
-    }
 
     acmd::install();
 
     Agent::new("luigi")
-    .set_costume(costume.to_vec())
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
 
         //fighter frame
         .on_line(Main, luigi_frame)
@@ -253,12 +199,13 @@ pub fn install() {
         .status(End, *FIGHTER_STATUS_KIND_THROW, luigi_throw_end)
 
         //INSTALLATION
-        .status(Main, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, specials_ram_main)
+        // .status(Main, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, specials_ram_main)
+        // .status(End, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, specials_ram_end)
 
         .install();
 
     Agent::new("luigi_fireball")
-    .set_costume(costume.to_vec())
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
 
         .status(Pre, *WEAPON_LUIGI_FIREBALL_STATUS_KIND_START, luigi_fireball_start_pre)
         .status(Main, *WEAPON_LUIGI_FIREBALL_STATUS_KIND_START, luigi_fireball_start_main)

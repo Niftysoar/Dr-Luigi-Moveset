@@ -85,6 +85,7 @@ unsafe extern "C" fn sound_appealsr(fighter: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("luigi")
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
         .sound_acmd("sound_entryr_luigid", sound_entryr, Priority::Low)  
         .sound_acmd("sound_entryl_luigid", sound_entryl, Priority::Low)
         .expression_acmd("expression_entryl_luigid", expression_entryl, Priority::Low)

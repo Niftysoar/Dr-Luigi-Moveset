@@ -151,6 +151,7 @@ pub fn install() {
     );
     
     Agent::new("luigi")
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
         .game_acmd("game_catch_luigid", game_catch, Priority::Low)
         .sound_acmd("sound_catch_luigid", sound_catch, Priority::Low)
     

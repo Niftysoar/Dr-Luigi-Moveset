@@ -54,6 +54,7 @@ unsafe extern "C" fn effect_attack13(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("luigi")
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
         .game_acmd("game_attack12_luigid", game_attack12, Priority::Low)
 
         .game_acmd("game_attack13_luigid", game_attack13, Priority::Low) 

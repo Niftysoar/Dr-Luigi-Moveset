@@ -82,6 +82,7 @@ unsafe extern "C" fn sound_win2(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("luigi")
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
         .game_acmd("game_win1_luigid", game_win1, Priority::Low)
         .effect_acmd("effect_win1_luigid", effect_win1, Priority::Low) 
         .sound_acmd("sound_win1_luigid", sound_win1, Priority::Low) 

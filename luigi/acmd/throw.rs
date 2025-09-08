@@ -279,6 +279,7 @@ unsafe extern "C" fn expression_throwlw(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("luigi")
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
         .game_acmd("game_throwb_luigid", game_throwb, Priority::Low) 
         .sound_acmd("sound_throwb_luigid", sound_throwb, Priority::Low)  
         .effect_acmd("effect_throwb_luigid", effect_throwb, Priority::Low)  
