@@ -15,68 +15,19 @@ use super::*;
 use crate::MARKED_COLORS;
 
 mod acmd;
+mod status;
 
 //Fighter Frame
 
 unsafe extern "C" fn luigi_frame(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        let color = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
-        
-        if crate::MARKED_COLORS[color as usize] {
-   
+    unsafe{
+        let boma = fighter.module_accessor;
+        let color = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
 
-            
+        if crate::MARKED_COLORS[color as usize] {
+
         }
     }
-}
-
-//Status
-unsafe extern "C" fn luigi_catch_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_Catch()
-}
-
-unsafe extern "C" fn luigi_catch_dash_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_CatchDash()
-}
-
-unsafe extern "C" fn luigi_catch_turn_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_CatchTurn()
-}
-
-unsafe extern "C" fn luigi_catch_pull_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_CatchPull()
-}
-
-unsafe extern "C" fn luigi_catch_pull_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_CatchPull()
-}
-
-unsafe extern "C" fn luigi_catch_dash_pull_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_CatchDashPull()
-}
-
-unsafe extern "C" fn luigi_catch_dash_pull_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_CatchDashPull()
-}
-
-unsafe extern "C" fn luigi_catch_wait_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_CatchWait()
-}
-
-unsafe extern "C" fn luigi_catch_wait_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_CatchWait()
-}
-
-unsafe extern "C" fn luigi_catch_cut_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_CatchCut()
-}
-
-unsafe extern "C" fn luigi_catch_attack_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_CatchAttack()
-}
-
-unsafe extern "C" fn luigi_throw_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_Throw()
 }
 
 // Pre
@@ -143,64 +94,16 @@ unsafe extern "C" fn luigi_fireball_start_main_loop(weapon: &mut L2CWeaponCommon
     return 0.into();
 }
 
-// //ORIGINAL CODE GIVEN
-// unsafe extern "C" fn specials_ram_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-//     let boma = fighter.module_accessor;
-//     KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-//     let stick_y = ControlModule::get_stick_y(boma);
-
-//     if stick_y.abs() > 0.2 { //how far the stick is pushed
-//         let vertical_influence = 0.4; //should be obvious 
-//         let y_add = stick_y * vertical_influence;
-//         sv_kinetic_energy::add_speed(fighter.lua_state_agent, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, &Vector3f { x: 0.0, y: y_add, z: 0.0 });
-//     }
-    
-//     smashline::original_status(Main, fighter, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM)(fighter)
-// }
-
-// // Clean up energy in original end script WHY ARE MY CHANGES NOT SAVING COME ONNN
-// unsafe extern "C" fn specials_ram_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-//     KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-    
-//     smashline::original_status(End, fighter, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM)(fighter)
-// }
-
-//ALSO THE STATUS DOESN'T SINGLE SLOT PROPERLY
 pub fn install() {
 
     acmd::install();
+    status::install();
 
     Agent::new("luigi")
     .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
 
         //fighter frame
         .on_line(Main, luigi_frame)
-
-        //Misc.
-        .status(End, *FIGHTER_STATUS_KIND_CATCH, luigi_catch_end)
-
-        .status(End, *FIGHTER_STATUS_KIND_CATCH_DASH, luigi_catch_dash_end)
-    
-        .status(End, *FIGHTER_STATUS_KIND_CATCH_TURN, luigi_catch_turn_end)
-    
-        .status(Main, *FIGHTER_STATUS_KIND_CATCH_PULL, luigi_catch_pull_main)
-        .status(End, *FIGHTER_STATUS_KIND_CATCH_PULL, luigi_catch_pull_end)
-    
-        .status(Main, *FIGHTER_STATUS_KIND_CATCH_DASH_PULL, luigi_catch_dash_pull_main)
-        .status(End, *FIGHTER_STATUS_KIND_CATCH_DASH_PULL, luigi_catch_dash_pull_end)
-    
-        .status(Main, *FIGHTER_STATUS_KIND_CATCH_WAIT, luigi_catch_wait_main)
-        .status(End, *FIGHTER_STATUS_KIND_CATCH_WAIT, luigi_catch_wait_end)
-    
-        .status(End, *FIGHTER_STATUS_KIND_CATCH_CUT, luigi_catch_cut_end)
-    
-        .status(End, *FIGHTER_STATUS_KIND_CATCH_ATTACK, luigi_catch_attack_end)
-    
-        .status(End, *FIGHTER_STATUS_KIND_THROW, luigi_throw_end)
-
-        //INSTALLATION
-        // .status(Main, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, specials_ram_main)
-        // .status(End, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, specials_ram_end)
 
         .install();
 

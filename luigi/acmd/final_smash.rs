@@ -209,6 +209,7 @@ unsafe extern "C" fn expression_finalair(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("luigi")
+    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
         .game_acmd("game_finalstart", game_final, Priority::Low) 
         .sound_acmd("sound_finalstart", sound_final, Priority::Low)  
         .effect_acmd("effect_finalstart", effect_final, Priority::Low)  
