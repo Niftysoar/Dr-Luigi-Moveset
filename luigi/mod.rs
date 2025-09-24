@@ -100,7 +100,7 @@ pub fn install() {
     status::install();
 
     Agent::new("luigi")
-    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
+    .set_costume([50, 51, 52, 53, 54, 55, 56, 57].to_vec())
 
         //fighter frame
         .on_line(Main, luigi_frame)
@@ -108,7 +108,7 @@ pub fn install() {
         .install();
 
     Agent::new("luigi_fireball")
-    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
+    .set_costume([50, 51, 52, 53, 54, 55, 56, 57].to_vec())
 
         .status(Pre, *WEAPON_LUIGI_FIREBALL_STATUS_KIND_START, luigi_fireball_start_pre)
         .status(Main, *WEAPON_LUIGI_FIREBALL_STATUS_KIND_START, luigi_fireball_start_main)

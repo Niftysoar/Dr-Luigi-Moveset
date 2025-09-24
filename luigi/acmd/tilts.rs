@@ -94,7 +94,7 @@ unsafe extern "C" fn game_attackhi3(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("luigi")
-    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
+    .set_costume([50, 51, 52, 53, 54, 55, 56, 57].to_vec())
         .game_acmd("game_attacks3_luigid", game_attacks3, Priority::Low)
         .game_acmd("game_attacks3hi_luigid", game_attacks3hi, Priority::Low) 
         .game_acmd("game_attacks3lw_luigid", game_attacks3lw, Priority::Low) 

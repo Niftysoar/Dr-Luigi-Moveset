@@ -8,7 +8,7 @@ mod smashes;
 mod ground;
 mod win;
 mod other;
-mod final_smash;
+// mod final_smash;
 
 pub fn install() {
     catch::install();
@@ -21,5 +21,5 @@ pub fn install() {
     ground::install();
     win::install();
     other::install();
-    final_smash::install();
+    // final_smash::install();
 }

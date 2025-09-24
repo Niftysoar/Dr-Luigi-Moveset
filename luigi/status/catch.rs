@@ -50,7 +50,7 @@ unsafe extern "C" fn luigi_throw_end(fighter: &mut L2CFighterCommon) -> L2CValue
 
 pub fn install() {
     Agent::new("luigi")
-    .set_costume([100, 101, 102, 103, 104, 105, 106, 107].to_vec())
+    .set_costume([50, 51, 52, 53, 54, 55, 56, 57].to_vec())
 
         .status(End, *FIGHTER_STATUS_KIND_CATCH, luigi_catch_end)
 
