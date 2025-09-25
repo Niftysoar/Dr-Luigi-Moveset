@@ -59,11 +59,11 @@ unsafe extern "C" fn sound_catch(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn game_catchdash(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
+    frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         GrabModule::set_rebound(agent.module_accessor, true);
     }
-    frame(agent.lua_state_agent, 8.0);
+    frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
         macros::CATCH(agent, 0, Hash40::new("top"), 2.6, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(10.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
         macros::CATCH(agent, 1, Hash40::new("top"), 1.3, 0.0, 6.6, 2.7, Some(0.0), Some(6.6), Some(11.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_A);
@@ -98,11 +98,11 @@ unsafe extern "C" fn sound_catchdash(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn game_catchturn(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 8.0);
+    frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
         GrabModule::set_rebound(agent.module_accessor, true);
     }
-    frame(agent.lua_state_agent, 9.0);
+    frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
         macros::CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, -4.0, Some(0.0), Some(6.6), Some(-14.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
         macros::CATCH(agent, 1, Hash40::new("top"), 1.65, 0.0, 6.6, -2.35, Some(0.0), Some(6.6), Some(-16.35), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_A);
@@ -129,7 +129,7 @@ unsafe extern "C" fn sound_catchturn(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    frame(agent.lua_state_agent, 16.0);
     if macros::is_excute(agent) {
         macros::ATTACK(agent, 0, 0, Hash40::new("head"), 3.2, 361, 100, 40, 0, 4.5, 3.0, 3.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
         AttackModule::set_catch_only_all(agent.module_accessor, true, false);
@@ -141,7 +141,7 @@ unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn effect_catchattack(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
+    frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
         macros::EFFECT_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("head"), 3, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, 0.7);
     }
