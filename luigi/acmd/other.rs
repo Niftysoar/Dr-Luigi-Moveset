@@ -60,27 +60,27 @@ unsafe extern "C" fn expression_entryl(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn effect_appealsr(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-		frame(fighter.lua_state_agent, 50.0);
-		if macros::is_excute(fighter) {
-			macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
-			macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
-			macros::LANDING_EFFECT(fighter, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
-		}
+    frame(fighter.lua_state_agent, 50.0);
+    if macros::is_excute(fighter) {
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+    }
 }	
 unsafe extern "C" fn sound_appealsr(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    	frame(fighter.lua_state_agent, 10.0);
-		if macros::is_excute(fighter) {
-			macros::PLAY_SE(fighter, Hash40::new("vc_luigi_appeal02"));
-		}
-        frame(fighter.lua_state_agent, 11.0);
-		if macros::is_excute(fighter) {
-			macros::PLAY_SE(fighter, Hash40::new("se_luigi_jump03"));
-		}
-        frame(fighter.lua_state_agent, 50.0);
-		if macros::is_excute(fighter) {
-			macros::PLAY_SE(fighter, Hash40::new("se_common_landing_soil"));
-		}
+    frame(fighter.lua_state_agent, 10.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SE(fighter, Hash40::new("vc_luigi_appeal02"));
+    }
+    frame(fighter.lua_state_agent, 11.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SE(fighter, Hash40::new("se_luigi_jump03"));
+    }
+    frame(fighter.lua_state_agent, 50.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SE(fighter, Hash40::new("se_common_landing_soil"));
+    }
 }
 
 pub fn install() {

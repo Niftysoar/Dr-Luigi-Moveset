@@ -124,19 +124,31 @@ unsafe extern "C" fn luigi_fireball_start_exec(weapon: &mut L2CWeaponCommon) -> 
     ) == 1;
 
     if is_touching_ground {
-        // Bounce upward
-        let lr = PostureModule::lr(weapon.module_accessor);
-        let speed_x = 1.2 * lr;
-        let bounce_y = 1.8;
+        // Get how many times this projectile has already bounced
+        let bounce_count = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_CUSTOMIZE_NO);
 
-        weapon.clear_lua_stack();
-        sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, bounce_y);
-        sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, bounce_y);
+        if bounce_count >= 2 {
+            // SECOND bounce → despawn
+            notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+            weapon.pop_lua_stack(1);
+            return 0.into();
+        } else {
+            // FIRST bounce → apply bounce and increment counter
+            let lr = PostureModule::lr(weapon.module_accessor);
+            let bounce_x = 1.2 * lr;
+            let bounce_y = 1.5;
 
-        // Bounce effect
-        macros::EFFECT(weapon, Hash40::new("sys_hit_elec"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, true);
+            weapon.clear_lua_stack();
+            sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, bounce_x, bounce_y);
+            sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, bounce_x, bounce_y);
+
+            // Bounce effect
+            macros::PLAY_SE(weapon, Hash40::new("se_luigi_special_n02"));
+            macros::FOOT_EFFECT(weapon, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, -3.5, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+
+            WorkModule::set_int(weapon.module_accessor, bounce_count + 1, *WEAPON_INSTANCE_WORK_ID_INT_CUSTOMIZE_NO);
+        }
     }
-
     0.into()
 }
 

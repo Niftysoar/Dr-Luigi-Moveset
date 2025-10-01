@@ -64,7 +64,6 @@ extern "C" fn mods_mounted(_ev: arcropolis_api::Event) {
         ui_chara_id: hash40("ui_chara_luigid"),
         clone_from_ui_chara_id: Some(hash40("ui_chara_luigi")),
         name_id: StringType::Overwrite(CStrCSK::new("luigid")),
-        ui_series_id: Hash40Type::Overwrite(hash40("ui_series_mario")),
         disp_order: SignedByteType::Overwrite(19),
         is_dlc:BoolType::Overwrite(false),
         is_patch: BoolType::Overwrite(false),
@@ -83,20 +82,6 @@ extern "C" fn mods_mounted(_ev: arcropolis_api::Event) {
         ui_layout_id: hash40("ui_chara_luigid_00"),
         clone_from_ui_layout_id: Some(hash40("ui_chara_luigi_00")),
         ui_chara_id: Hash40Type::Overwrite(hash40("ui_chara_luigid")),
-        ..Default::default()
-    });
-
-    add_series_db_entry_info(SeriesDatabaseEntry {
-        ui_series_id: hash40("ui_series_mario"),
-        name_id: StringType::Overwrite(CStrCSK::new("mario")),
-        disp_order: SignedByteType::Overwrite(0),
-        disp_order_sound: SignedByteType::Overwrite(0),
-        save_no: SignedByteType::Overwrite(0),
-        shown_as_series_in_directory: BoolType::Overwrite(false),
-        is_dlc: BoolType::Overwrite(false),
-        is_patch: BoolType::Overwrite(false),
-        dlc_chara_id: Hash40Type::Overwrite(0),
-        is_use_amiibo_bg: BoolType::Overwrite(false),
         ..Default::default()
     });
 
