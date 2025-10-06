@@ -1,4 +1,19 @@
+use {
+    smash::{
+        lua2cpp::*,
+        phx::*,
+        app::{sv_animcmd::*, lua_bind::*, *},
+        lib::lua_const::*,
+        hash40
+	},
+    smash_script::*,
+    smashline::*
+};
+
+use smashline::Priority::*;
 use super::*;
+
+use crate::luigi::*;
 
 unsafe extern "C" fn luigi_catch_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.status_end_Catch()

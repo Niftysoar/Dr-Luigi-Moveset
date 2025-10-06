@@ -15,44 +15,17 @@ use smash::lib::lua_const::{FIGHTER_KIND_LUIGI};
 mod luigi;
 
 pub static mut MARKED_COLORS: [bool; 256] = [false; 256];
-pub static mut LAST_COLOR: i32 = -1;
 
 extern "C" fn mods_mounted(_ev: arcropolis_api::Event) {
-    const FIGHTER_NAME: &str = "luigi";
-    const MARKER_FILE: &str = "luigid.marker";
-    let mut lowest_color: i32 = -1;
-    let mut marked_slots: Vec<i32> = vec![];
-    for x in 0..256 {
-        if let Ok(_) = std::fs::read(format!(
-            "mods:/fighter/{}/model/body/c{:02}/{}",
-            FIGHTER_NAME, x, MARKER_FILE
-        )) {
-            unsafe {
-                marked_slots.push(x as _);
-                MARKED_COLORS[x as usize] = true;
-                if lowest_color == -1 {
-                    lowest_color = x as _ ;
-                }
-            }
+    let lowest_color: i32 = 50;
+    let color_num: i32 = 8;
+    let marked_slots: Vec<i32> = (50..=57).collect();
+
+    unsafe {
+        for slot in &marked_slots {
+            MARKED_COLORS[*slot as usize] = true;
         }
     }
-
-
-    if lowest_color == -1 {
-        // if no marker exist, leave
-        return;
-    }
-
-    let color_num = {
-        unsafe {
-            let mut index = lowest_color;
-            while index < 256 && MARKED_COLORS[index as usize] {
-                index += 1;
-            }
-            LAST_COLOR = index - 1;
-            index - lowest_color
-        }
-    };
 
     // Param Edits
 
@@ -64,7 +37,6 @@ extern "C" fn mods_mounted(_ev: arcropolis_api::Event) {
         ui_chara_id: hash40("ui_chara_luigid"),
         clone_from_ui_chara_id: Some(hash40("ui_chara_luigi")),
         name_id: StringType::Overwrite(CStrCSK::new("luigid")),
-        disp_order: SignedByteType::Overwrite(19),
         is_dlc:BoolType::Overwrite(false),
         is_patch: BoolType::Overwrite(false),
         color_num: UnsignedByteType::Overwrite(color_num as u8),
@@ -86,6 +58,7 @@ extern "C" fn mods_mounted(_ev: arcropolis_api::Event) {
     });
 
 }
+
 
 #[skyline::main(name = "smashline_test")]
 pub fn main() {
