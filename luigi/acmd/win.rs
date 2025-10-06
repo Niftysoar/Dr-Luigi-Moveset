@@ -79,16 +79,26 @@ unsafe extern "C" fn sound_win2(agent: &mut L2CAgentBase) {
 // ********************
 // WiN 3
 // ********************
+unsafe extern "C" fn effect_win3(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    frame(fighter.lua_state_agent, 45.0);
+    if macros::is_excute(fighter) {
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+    }
+}	
+
 unsafe extern "C" fn sound_win3(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
+    frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_luigi_jump03"));
     }
-    frame(agent.lua_state_agent, 26.0);
+    frame(agent.lua_state_agent, 44.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_common_landing_soil"));
     }
-    frame(agent.lua_state_agent, 71.0);
+    frame(agent.lua_state_agent, 95.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("vc_luigi_jump02"));
     }
@@ -103,6 +113,7 @@ pub fn install() {
 
         .sound_acmd("sound_win2_luigid", sound_win2, Priority::Low)
 
+        .effect_acmd("effect_win3_luigid", effect_win3, Priority::Low) 
         .sound_acmd("sound_win3_luigid", sound_win3, Priority::Low)
 
         .install();

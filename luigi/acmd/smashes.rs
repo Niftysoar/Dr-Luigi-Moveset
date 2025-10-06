@@ -159,72 +159,58 @@ unsafe extern "C" fn effect_attackhi4(agent: &mut L2CAgentBase) {
 // ********************
 // D SMASH
 // ********************
-unsafe extern "C" fn game_attacklw4(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
-    if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+unsafe extern "C" fn game_attacklw4(fighter: &mut L2CAgentBase) {
+    let bones = ["handr", "handl", "armr", "arml"];
+
+    frame(fighter.lua_state_agent, 5.0);
+    if macros::is_excute(fighter) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
-    frame(agent.lua_state_agent, 6.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 15.0, 52, 100, 0, 48, 4.5, 0.0, 3.6, 11.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 16.0, 52, 100, 0, 48, 4.0, 0.0, 3.6, 6.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_LOW), false);
+
+    frame(fighter.lua_state_agent, 8.0);
+    if macros::is_excute(fighter) {
+        for (i, bone) in bones.iter().enumerate() {
+            macros::ATTACK(fighter, i as u64, 0, Hash40::new(bone), 16.0, 361, 124, 0, 23, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        }
     }
-    wait(agent.lua_state_agent, 2.0);
-    if macros::is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+
+    frame(fighter.lua_state_agent, 13.0);
+    if macros::is_excute(fighter) {
+        for (i, bone) in bones.iter().enumerate() {
+            macros::ATTACK(fighter, i as u64, 0, Hash40::new(bone), 8.0, 361, 95, 0, 30, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        }
     }
-    frame(agent.lua_state_agent, 14.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 15.0, 48, 100, 0, 48, 4.5, 0.0, 3.6, -10.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 16.0, 48, 100, 0, 48, 4.0, 0.0, 3.6, -6.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_LOW), false);
-    }
-    wait(agent.lua_state_agent, 2.0);
-    if macros::is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+
+    frame(fighter.lua_state_agent, 17.0);
+    if macros::is_excute(fighter) {
+        AttackModule::clear_all(fighter.module_accessor);
     }
 }
 
-unsafe extern "C" fn effect_attacklw4(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    frame(agent.lua_state_agent, 2.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("toer"), 0, 0, -3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+unsafe extern "C" fn effect_attacklw4(fighter: &mut L2CAgentBase) {
+    let hands = ["handl", "handr"];
+
+    frame(fighter.lua_state_agent, 8.0);
+    if macros::is_excute(fighter) {
+        for hand in hands.iter() {
+            macros::EFFECT_FOLLOW(fighter, Hash40::new("mariod_smash_aura"), Hash40::new(hand), 3.2, 0, 0, 0, 0, 0, 0.375, true);
+            macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("mariod_smash_impact"), Hash40::new("mariod_smash_impact"), Hash40::new(hand), 1.0, 0, 0, 0, 0, 0, 0.8, true, *EF_FLIP_YZ);
+        }
     }
-    frame(agent.lua_state_agent, 4.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("luigi_smash_arc"), Hash40::new("luigi_smash_arc"), Hash40::new("top"), 0, 3.5, 0, -2, -30, 166, 1.15, true, *EF_FLIP_YZ);
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_aura"), Hash40::new("mariod_smash_aura"), Hash40::new("hip"), -7.0, 0.0, 0.0, 0, 0, 0, 0.8, true, *EF_FLIP_YZ);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.8);
+
+    frame(fighter.lua_state_agent, 17.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_OFF_KIND(fighter, Hash40::new("mariod_smash_aura"), false, true);
     }
-    frame(lua_state, 6.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_impact"), Hash40::new("mariod_smash_impact"), Hash40::new("top"), 1.0, 3.6, 12.5, 0, 0, 0, 0.8, true, *EF_FLIP_YZ);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if macros::is_excute(agent) {
-        macros::LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-        macros::LAST_EFFECT_SET_ALPHA(agent, 0.8);
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("luigi_smash_arc"), Hash40::new("luigi_smash_arc"), Hash40::new("top"), 0, 3.5, 0, 1, 160, 173, 1.15, true, *EF_FLIP_YZ);
-    }
-    frame(lua_state, 13.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_aura"), Hash40::new("mariod_smash_aura"), Hash40::new("hip"), -7.0, 0.0, 0.0, 0, 0, 0, 0.8, true, *EF_FLIP_YZ);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.8);
-    }
-    frame(lua_state, 14.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_impact"), Hash40::new("mariod_smash_impact"), Hash40::new("top"), 1.0, 3.6, -11.5, 0, 0, 0, 0.8, true, *EF_FLIP_YZ);
-    }
-    frame(lua_state, 17.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_OFF_KIND(agent, Hash40::new("mariod_smash_impact"), true, true);
-    }
-    frame(lua_state, 20.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_OFF_KIND(agent, Hash40::new("mariod_smash_aura"), false, true);
-    }
+}
+
+unsafe extern "C" fn sound_attacklw4(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+	frame(fighter.lua_state_agent, 8.0);
+	if macros::is_excute(fighter) {
+		macros::PLAY_SE(fighter, Hash40::new("se_luigi_smash_s01"));
+		macros::PLAY_SE(fighter, Hash40::new("vc_luigi_attack06"));
+	}
 }
 
 pub fn install() {
@@ -242,6 +228,7 @@ pub fn install() {
 
         .game_acmd("game_attacklw4_luigid", game_attacklw4, Priority::Low)
         .effect_acmd("effect_attacklw4_luigid", effect_attacklw4, Priority::Low)
+        .sound_acmd("sound_attacklw4_luigid", sound_attacklw4, Priority::Low) 
 
         .install();
 }
