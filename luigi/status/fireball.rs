@@ -103,9 +103,11 @@ unsafe extern "C" fn luigi_fireball_start_main_loop(weapon: &mut L2CWeaponCommon
 
 unsafe extern "C" fn luigi_fireball_start_exec(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
+    let owner_boma = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+    let stick_y = ControlModule::get_stick_y(owner_boma);
     
     let mut current_rotation_y = WorkModule::get_float(boma, ARTICLE_INSTANCE_WORK_ID_FLOAT_ROTATION);
-    current_rotation_y += 5.0 ;
+    current_rotation_y += 6.0 ;
     WorkModule::set_float(boma, current_rotation_y, ARTICLE_INSTANCE_WORK_ID_FLOAT_ROTATION);
 
     let new_rotation = smash::phx::Vector3f {
@@ -115,11 +117,11 @@ unsafe extern "C" fn luigi_fireball_start_exec(weapon: &mut L2CWeaponCommon) -> 
     };
 
     ModelModule::set_joint_rotate(
-    boma,
-    Hash40::new("Drcapsule"),
-    &new_rotation,
-    MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8},
-    MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8}
+        boma,
+        Hash40::new("Drcapsule"),
+        &new_rotation,
+        MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8},
+        MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8}
     );
     
     let is_touching_ground = GroundModule::ray_check(
@@ -130,10 +132,13 @@ unsafe extern "C" fn luigi_fireball_start_exec(weapon: &mut L2CWeaponCommon) -> 
     ) == 1;
 
     if is_touching_ground {
-    let bounce_count = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_CUSTOMIZE_NO);
+        let bounce_count = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_CUSTOMIZE_NO);
+
+        // set max bounces depending on stick
+        let max_bounces = if stick_y > 0.5 { 1 } else { 2 };
 
         // 1. Changed the limit to 3
-        if bounce_count >= 3 {
+        if bounce_count >= max_bounces {
             notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
             macros::EFFECT(weapon, Hash40::new("sys_erace_smoke"), Hash40::new("top"), 0, -3.5, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
             weapon.pop_lua_stack(1);
