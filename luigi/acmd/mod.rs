@@ -1,6 +1,6 @@
 mod catch;
 mod throw;
-mod areals;
+mod aerials;
 mod specials;
 mod tilts;
 mod jabs;
@@ -13,7 +13,7 @@ mod other;
 pub fn install() {
     catch::install();
     throw::install();
-    areals::install();
+    aerials::install();
     specials::install();
     tilts::install();
     jabs::install();

@@ -80,7 +80,6 @@ unsafe extern "C" fn sound_win2(agent: &mut L2CAgentBase) {
 // WiN 3
 // ********************
 unsafe extern "C" fn effect_win3(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
     frame(fighter.lua_state_agent, 45.0);
     if macros::is_excute(fighter) {
         macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
@@ -107,14 +106,14 @@ unsafe extern "C" fn sound_win3(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("luigi")
     .set_costume([50, 51, 52, 53, 54, 55, 56, 57].to_vec())
-        .game_acmd("game_win1_luigid", game_win1, Priority::Low)
-        .effect_acmd("effect_win1_luigid", effect_win1, Priority::Low) 
-        .sound_acmd("sound_win1_luigid", sound_win1, Priority::Low) 
+        .game_acmd("game_win1", game_win1, Priority::Low)
+        .effect_acmd("effect_win1", effect_win1, Priority::Low) 
+        .sound_acmd("sound_win1", sound_win1, Priority::Low) 
 
-        .sound_acmd("sound_win2_luigid", sound_win2, Priority::Low)
+        .sound_acmd("sound_win2", sound_win2, Priority::Low)
 
-        .effect_acmd("effect_win3_luigid", effect_win3, Priority::Low) 
-        .sound_acmd("sound_win3_luigid", sound_win3, Priority::Low)
+        .effect_acmd("effect_win3", effect_win3, Priority::Low) 
+        .sound_acmd("sound_win3", sound_win3, Priority::Low)
 
         .install();
 }

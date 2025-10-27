@@ -280,25 +280,25 @@ unsafe extern "C" fn expression_throwlw(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("luigi")
     .set_costume([50, 51, 52, 53, 54, 55, 56, 57].to_vec())
-        .game_acmd("game_throwb_luigid", game_throwb, Priority::Low) 
-        .sound_acmd("sound_throwb_luigid", sound_throwb, Priority::Low)  
-        .effect_acmd("effect_throwb_luigid", effect_throwb, Priority::Low)  
-        .expression_acmd("expression_throwb_luigid", expression_throwb, Priority::Low)  
+        .game_acmd("game_throwb", game_throwb, Priority::Low) 
+        .sound_acmd("sound_throwb", sound_throwb, Priority::Low)  
+        .effect_acmd("effect_throwb", effect_throwb, Priority::Low)  
+        .expression_acmd("expression_throwb", expression_throwb, Priority::Low)  
 
-        .game_acmd("game_throwf_luigid", game_throwf, Priority::Low) 
-        .sound_acmd("sound_throwf_luigid", sound_throwf, Priority::Low)  
-        .effect_acmd("effect_throwf_luigid", effect_throwf, Priority::Low)  
-        .expression_acmd("expression_throwf_luigid", expression_throwf, Priority::Low)
+        .game_acmd("game_throwf", game_throwf, Priority::Low) 
+        .sound_acmd("sound_throwf", sound_throwf, Priority::Low)  
+        .effect_acmd("effect_throwf", effect_throwf, Priority::Low)  
+        .expression_acmd("expression_throwf", expression_throwf, Priority::Low)
 
-        .game_acmd("game_throwhi_luigid", game_throwhi, Priority::Low)
-        .effect_acmd("effect_throwhi_luigid", effect_throwhi, Priority::Low)
-        .sound_acmd("sound_throwhi_luigid", sound_throwhi, Priority::Low)
-        .expression_acmd("expression_throwhi_luigid", expression_throwhi, Priority::Low)
+        .game_acmd("game_throwhi", game_throwhi, Priority::Low)
+        .effect_acmd("effect_throwhi", effect_throwhi, Priority::Low)
+        .sound_acmd("sound_throwhi", sound_throwhi, Priority::Low)
+        .expression_acmd("expression_throwhi", expression_throwhi, Priority::Low)
     
-        .game_acmd("game_throwlw_luigid", game_throwlw, Priority::Low)
-        .effect_acmd("effect_throwlw_luigid", effect_throwlw, Priority::Low)
-        .sound_acmd("sound_throwlw_luigid", sound_throwlw, Priority::Low)
-        .expression_acmd("expression_throwlw_luigid", expression_throwlw, Priority::Low)
+        .game_acmd("game_throwlw", game_throwlw, Priority::Low)
+        .effect_acmd("effect_throwlw", effect_throwlw, Priority::Low)
+        .sound_acmd("sound_throwlw", sound_throwlw, Priority::Low)
+        .expression_acmd("expression_throwlw", expression_throwlw, Priority::Low)
 
         .install();
 }

@@ -160,8 +160,6 @@ unsafe extern "C" fn effect_attackhi4(agent: &mut L2CAgentBase) {
 // D SMASH
 // ********************
 unsafe extern "C" fn game_attacklw4(fighter: &mut L2CAgentBase) {
-    let bones = ["handr", "handl", "armr", "arml"];
-
     frame(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
@@ -169,16 +167,18 @@ unsafe extern "C" fn game_attacklw4(fighter: &mut L2CAgentBase) {
 
     frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
-        for (i, bone) in bones.iter().enumerate() {
-            macros::ATTACK(fighter, i as u64, 0, Hash40::new(bone), 16.0, 361, 124, 0, 23, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        }
+        macros::ATTACK(fighter, 0, 0, Hash40::new("handr"), 18.0, 361, 110, 0, 23, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        macros::ATTACK(fighter, 1, 0, Hash40::new("handl"), 18.0, 361, 110, 0, 23, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        macros::ATTACK(fighter, 2, 0, Hash40::new("armr"), 18.0, 361, 110, 0, 23, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        macros::ATTACK(fighter, 3, 0, Hash40::new("arml"), 18.0, 361, 110, 0, 23, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
 
     frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
-        for (i, bone) in bones.iter().enumerate() {
-            macros::ATTACK(fighter, i as u64, 0, Hash40::new(bone), 8.0, 361, 95, 0, 30, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        }
+        macros::ATTACK(fighter, 0, 0, Hash40::new("handr"), 8.0, 361, 95, 0, 30, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        macros::ATTACK(fighter, 1, 0, Hash40::new("handl"), 8.0, 361, 95, 0, 30, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        macros::ATTACK(fighter, 2, 0, Hash40::new("armr"), 8.0, 361, 95, 0, 30, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        macros::ATTACK(fighter, 3, 0, Hash40::new("arml"), 8.0, 361, 95, 0, 30, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
 
     frame(fighter.lua_state_agent, 17.0);
@@ -188,14 +188,12 @@ unsafe extern "C" fn game_attacklw4(fighter: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn effect_attacklw4(fighter: &mut L2CAgentBase) {
-    let hands = ["handl", "handr"];
-
-    frame(fighter.lua_state_agent, 8.0);
-    if macros::is_excute(fighter) {
-        for hand in hands.iter() {
-            macros::EFFECT_FOLLOW(fighter, Hash40::new("mariod_smash_aura"), Hash40::new(hand), 3.2, 0, 0, 0, 0, 0, 0.375, true);
-            macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("mariod_smash_impact"), Hash40::new("mariod_smash_impact"), Hash40::new(hand), 1.0, 0, 0, 0, 0, 0, 0.8, true, *EF_FLIP_YZ);
-        }
+frame(fighter.lua_state_agent, 8.0);
+if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("mariod_smash_aura"), Hash40::new("handl"), 3.2, 0, 0, 0, 0, 0, 0.375, true);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("mariod_smash_aura"), Hash40::new("handr"), 3.2, 0, 0, 0, 0, 0, 0.375, true);
+        macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("mariod_smash_impact"), Hash40::new("mariod_smash_impact"), Hash40::new("handl"), 1.0, 0, 0, 0, 0, 0, 0.8, true, *EF_FLIP_YZ);
+        macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("mariod_smash_impact"), Hash40::new("mariod_smash_impact"), Hash40::new("handr"), 1.0, 0, 0, 0, 0, 0, 0.8, true, *EF_FLIP_YZ);
     }
 
     frame(fighter.lua_state_agent, 17.0);
@@ -205,7 +203,6 @@ unsafe extern "C" fn effect_attacklw4(fighter: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn sound_attacklw4(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
 	frame(fighter.lua_state_agent, 8.0);
 	if macros::is_excute(fighter) {
 		macros::PLAY_SE(fighter, Hash40::new("se_luigi_smash_s01"));
@@ -216,19 +213,19 @@ unsafe extern "C" fn sound_attacklw4(fighter: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("luigi")
     .set_costume([50, 51, 52, 53, 54, 55, 56, 57].to_vec())
-        .game_acmd("game_attacks4_luigid", game_attacks4, Priority::Low)  
-        .effect_acmd("effect_attacks4_luigid", effect_attacks4, Priority::Low)  
-        .game_acmd("game_attacks4hi_luigid", game_attacks4hi, Priority::Low)  
-        .effect_acmd("effect_attacks4hi_luigid", effect_attacks4hi, Priority::Low)  
-        .game_acmd("game_attacks4lw_luigid", game_attacks4lw, Priority::Low)  
-        .effect_acmd("effect_attacks4lw_luigid", effect_attacks4lw, Priority::Low)  
+        .game_acmd("game_attacks4", game_attacks4, Priority::Low)  
+        .effect_acmd("effect_attacks4", effect_attacks4, Priority::Low)  
+        .game_acmd("game_attacks4hi", game_attacks4hi, Priority::Low)  
+        .effect_acmd("effect_attacks4hi", effect_attacks4hi, Priority::Low)  
+        .game_acmd("game_attacks4lw", game_attacks4lw, Priority::Low)  
+        .effect_acmd("effect_attacks4lw", effect_attacks4lw, Priority::Low)  
 
-        .game_acmd("game_attackhi4_luigid", game_attackhi4, Priority::Low) 
-        .effect_acmd("effect_attackhi4_luigid", effect_attackhi4, Priority::Low)
+        .game_acmd("game_attackhi4", game_attackhi4, Priority::Low) 
+        .effect_acmd("effect_attackhi4", effect_attackhi4, Priority::Low)
 
-        .game_acmd("game_attacklw4_luigid", game_attacklw4, Priority::Low)
-        .effect_acmd("effect_attacklw4_luigid", effect_attacklw4, Priority::Low)
-        .sound_acmd("sound_attacklw4_luigid", sound_attacklw4, Priority::Low) 
+        .game_acmd("game_attacklw4", game_attacklw4, Priority::Low)
+        .effect_acmd("effect_attacklw4", effect_attacklw4, Priority::Low)
+        .sound_acmd("sound_attacklw4", sound_attacklw4, Priority::Low) 
 
         .install();
 }

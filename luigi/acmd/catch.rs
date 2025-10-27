@@ -34,8 +34,8 @@ unsafe extern "C" fn game_catch(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.9, 4.0, Some(0.0), Some(6.8), Some(8.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
-        macros::CATCH(agent, 1, Hash40::new("top"), 1.65, 0.0, 6.6, 2.35, Some(0.0), Some(6.6), Some(10.35), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_A);
+        macros::CATCH(agent, 0, Hash40::new("top"), 3.7, 0.0, 7.4, 4.0, Some(0.0), Some(6.8), Some(8.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 1, Hash40::new("top"), 2.65, 0.0, 6.9, 2.35, Some(0.0), Some(6.6), Some(10.35), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_A);
     }
     let animcmd: &mut L2CFighterAnimcmdGameCommon = std::mem::transmute(&mut *agent);
     L2CFighterAnimcmdGameCommon::game_CaptureCutCommon(animcmd);
@@ -65,8 +65,8 @@ unsafe extern "C" fn game_catchdash(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 2.6, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(10.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
-        macros::CATCH(agent, 1, Hash40::new("top"), 1.3, 0.0, 6.6, 2.7, Some(0.0), Some(6.6), Some(11.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_A);
+        macros::CATCH(agent, 0, Hash40::new("top"), 3.2, 0.0, 7.3, 4.0, Some(0.0), Some(6.6), Some(10.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 1, Hash40::new("top"), 1.9, 0.0, 6.9, 2.7, Some(0.0), Some(6.6), Some(11.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_A);
     }
     let animcmd: &mut L2CFighterAnimcmdGameCommon = std::mem::transmute(&mut *agent);
     L2CFighterAnimcmdGameCommon::game_CaptureCutCommon(animcmd);
@@ -129,6 +129,7 @@ unsafe extern "C" fn sound_catchturn(agent: &mut L2CAgentBase) {
 }
 
 unsafe extern "C" fn game_catchattack(agent: &mut L2CAgentBase) {
+    macros::FT_MOTION_RATE(agent, 1.5);
     frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         macros::ATTACK(agent, 0, 0, Hash40::new("head"), 1.3, 361, 100, 40, 0, 4.5, 3.0, 3.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
@@ -147,6 +148,7 @@ unsafe extern "C" fn effect_catchattack(agent: &mut L2CAgentBase) {
     }
 }
 
+
 pub fn install() {
     skyline::install_hooks!(
         luigi_change_motion_callback,
@@ -155,17 +157,17 @@ pub fn install() {
     
     Agent::new("luigi")
     .set_costume([50, 51, 52, 53, 54, 55, 56, 57].to_vec())
-        .game_acmd("game_catch_luigid", game_catch, Priority::Low)
-        .sound_acmd("sound_catch_luigid", sound_catch, Priority::Low)
+        .game_acmd("game_catch", game_catch, Priority::Low)
+        .sound_acmd("sound_catch", sound_catch, Priority::Low)
     
-        .game_acmd("game_catchdash_luigid", game_catchdash, Priority::Low)
-        .sound_acmd("sound_catchdash_luigid", sound_catchdash, Priority::Low)
+        .game_acmd("game_catchdash", game_catchdash, Priority::Low)
+        .sound_acmd("sound_catchdash", sound_catchdash, Priority::Low)
     
-        .game_acmd("game_catchturn_luigid", game_catchturn, Priority::Low)
-        .sound_acmd("sound_catchturn_luigid", sound_catchturn, Priority::Low)
+        .game_acmd("game_catchturn", game_catchturn, Priority::Low)
+        .sound_acmd("sound_catchturn", sound_catchturn, Priority::Low)
     
-        .game_acmd("game_catchattack_luigid", game_catchattack, Priority::Low)
-        .effect_acmd("effect_catchattack_luigid", effect_catchattack, Priority::Low)
+        .game_acmd("game_catchattack", game_catchattack, Priority::Low)
+        .effect_acmd("effect_catchattack", effect_catchattack, Priority::Low)
 
         .install();
 }

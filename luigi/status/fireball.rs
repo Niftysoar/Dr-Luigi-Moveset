@@ -2,7 +2,7 @@ use {
     smash::{
         lua2cpp::*,
         phx::*,
-        app::{sv_animcmd::*, lua_bind::*, *},
+        app::{sv_animcmd::*, lua_bind::*, sv_math, *},
         lib::lua_const::*,
         hash40
 	},
@@ -23,7 +23,8 @@ unsafe extern "C" fn luigi_fireball_start_pre(weapon: &mut L2CWeaponCommon) -> L
 
 // Main
 unsafe extern "C" fn luigi_fireball_start_main(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    MotionModule::change_motion(weapon.module_accessor, Hash40::new("regular"), 0.0, 1.0, false, 0.0, false, false);
+    let random = sv_math::rand(hash40("luigi_fireball"), 17) as f32;
+    MotionModule::change_motion(weapon.module_accessor, Hash40::new("regular"), random, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(luigi_fireball_start_main_loop as *const () as _))
 }
 
@@ -53,31 +54,67 @@ unsafe extern "C" fn luigi_fireball_start_init(weapon: &mut L2CWeaponCommon) -> 
     KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
 
     // Lifespan
-    WorkModule::set_int(weapon.module_accessor, 160, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    let stick_y = ControlModule::get_stick_y(&mut *owner_boma);
+    let lifespan;
+    if stick_y > 0.5 { 
+        lifespan = 90; 
+    } else if stick_y < -0.5 { 
+        lifespan = 130;
+    } else { 
+        lifespan = 110;
+    }
+
+    WorkModule::set_int(weapon.module_accessor, lifespan, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    WorkModule::set_int(weapon.module_accessor, lifespan, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
+
+    WorkModule::set_float(weapon.module_accessor, 1.0, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLOAT_PILL_ROTATION_DIRECTION);
 
     0.into()
 }
 
 unsafe extern "C" fn luigi_fireball_start_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    // Declare owner boma
+    //temporary
+    /*if 
+    !GroundModule::is_touch(item.module_accessor, (*GROUND_TOUCH_FLAG_LEFT | *GROUND_TOUCH_FLAG_RIGHT) as u32) {
+        let normal_x = GroundModule::get_touch_normal_x(item.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
+        let normal_y = GroundModule::get_touch_normal_y(item.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
+        // println!("normal: {}, {}", normal_x, normal_y);
+        let angle = normal_x.atan2(normal_y);
+        // println!("angle: {}", angle.to_degrees());
+        let speed = 1.29;
+        let speed_x = speed * angle.cos();
+        let speed_y = speed * angle.sin();
+        // println!("speed: {}, {}", speed_x, speed_y);
+        let lr = PostureModule::lr(item.module_accessor);
+        item.clear_lua_stack();
+        lua_args!(item, 0, 0);
+        KINETIC_ENERGY_CONTROL_SET_ACCEL(item.lua_state_agent, &Vector2f{x: 0.0, y: 0.0});
+        item.clear_lua_stack();
+        lua_args!(item, 0, 0);
+        KINETIC_ENERGY_CONTROL_SET_BRAKE(item.lua_state_agent, &Vector2f{x: 0.0248, y: 0.0});
+        item.clear_lua_stack();
+        lua_args!(item, speed, speed);
+        KINETIC_ENERGY_CONTROL_SET_STABLE_SPEED(item.lua_state_agent, &Vector2f{x: 0.0, y: speed});
+        item.clear_lua_stack();
+        lua_args!(item, speed, speed);
+        KINETIC_ENERGY_CONTROL_SET_LIMIT_SPEED(item.lua_state_agent, &Vector2f{x: speed, y: speed});
+        item.clear_lua_stack();
+        lua_args!(item, speed_x.abs() * lr, -speed_y * lr);
+        KINETIC_ENERGY_CONTROL_SET_SPEED(item.lua_state_agent, &Vector2f{x: speed_x.abs() * lr, y: -speed_y * lr});
+        item.clear_lua_stack();
+        KINETIC_ENERGY_CONTROL_ENABLE(item.lua_state_agent);
+    } */
     let owner_boma = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    // Declare facing
     let facing = PostureModule::lr(weapon.module_accessor);
-    // Declare x and y speeds
     let energy_type = KineticModule::get_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL) as *mut smash::app::KineticEnergy;
     let mut speed_x: f32 = lua_bind::KineticEnergy::get_speed_x(energy_type);
     let mut speed_y: f32 = lua_bind::KineticEnergy::get_speed_y(energy_type);
-    // Declare acceleration and max speed
     let accel_x: f32 = if facing == 1.0 { 0.04 } else { -0.04 };
     let accel_y: f32 = -0.1;
     let speed_max_x: f32 = if facing == 1.0 { 1.0 } else { -1.0 };
     let speed_max_y: f32 = 2.0;
-    // Declare status_frame
     let status_frame = weapon.global_table[0xe].get_f32();
-    // Get control stick y pos
     let stick_y = ControlModule::get_stick_y(owner_boma);
-
-    WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     
     // Add x speed until max speed is reached
     if speed_max_x > speed_x.abs() {
@@ -103,26 +140,46 @@ unsafe extern "C" fn luigi_fireball_start_main_loop(weapon: &mut L2CWeaponCommon
 
 unsafe extern "C" fn luigi_fireball_start_exec(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let owner_boma = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let stick_y = ControlModule::get_stick_y(owner_boma);
+    let life = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    WorkModule::dec_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    //wall and ceiling check
+    let mut rot_dir = WorkModule::get_float(boma, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLOAT_PILL_ROTATION_DIRECTION);
+    let is_touching_left_wall = GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_LEFT as u32);
+    let is_touching_right_wall = GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_RIGHT as u32);
+    let is_touching_ceiling = GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_UP as u32) || GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_UP_LEFT as u32) || GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_UP_SIDE as u32) || GroundModule::is_touch(boma, *GROUND_TOUCH_FLAG_UP_RIGHT as u32);
+    println!("{} ceiling direction flag",GroundModule::get_touch_flag(weapon.module_accessor));
     
-    let mut current_rotation_y = WorkModule::get_float(boma, ARTICLE_INSTANCE_WORK_ID_FLOAT_ROTATION);
-    current_rotation_y += 6.0 ;
-    WorkModule::set_float(boma, current_rotation_y, ARTICLE_INSTANCE_WORK_ID_FLOAT_ROTATION);
+    if is_touching_ceiling {
+        let energy = KineticModule::get_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL) as *mut smash::app::KineticEnergy;
+        let speed_x = lua_bind::KineticEnergy::get_speed_x(energy);
+        let speed_y = lua_bind::KineticEnergy::get_speed_y(energy);
 
-    let new_rotation = smash::phx::Vector3f {
-        x: 0.0,
-        y: current_rotation_y,
-        z: 0.0,
-    };
+        let new_speed_y = -speed_y;
+        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, new_speed_y);
 
-    ModelModule::set_joint_rotate(
-        boma,
-        Hash40::new("Drcapsule"),
-        &new_rotation,
-        MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8},
-        MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8}
-    );
+        macros::PLAY_SE(weapon, Hash40::new("se_luigi_special_n02"));
+    }
+    
+    else if is_touching_left_wall || is_touching_right_wall {
+        let energy = KineticModule::get_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL) as *mut smash::app::KineticEnergy;
+        let speed_x = lua_bind::KineticEnergy::get_speed_x(energy);
+        let speed_y = lua_bind::KineticEnergy::get_speed_y(energy);
+        let new_speed_x = -speed_x;
+        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, new_speed_x, speed_y);
+        
+        rot_dir *= -1.0;
+        WorkModule::set_float(boma, rot_dir, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLOAT_PILL_ROTATION_DIRECTION);
+        
+        macros::PLAY_SE(weapon, Hash40::new("se_luigi_special_n02"));
+    }
+
+    //rotate
+    let mut current_rotation_y = WorkModule::get_float(boma, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLOAT_PILL_ROTATION);
+    current_rotation_y += 6.0 * rot_dir;
+    WorkModule::set_float(boma, current_rotation_y, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLOAT_PILL_ROTATION);
+
+    let new_rotation = smash::phx::Vector3f { x: 0.0, y: current_rotation_y, z: 0.0 };
+    ModelModule::set_joint_rotate( boma, Hash40::new("Drcapsule"), &new_rotation, MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8});
     
     let is_touching_ground = GroundModule::ray_check(
         weapon.module_accessor,
@@ -132,38 +189,31 @@ unsafe extern "C" fn luigi_fireball_start_exec(weapon: &mut L2CWeaponCommon) -> 
     ) == 1;
 
     if is_touching_ground {
-        let bounce_count = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_CUSTOMIZE_NO);
+        let energy = KineticModule::get_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL) as *mut smash::app::KineticEnergy;
+        let current_speed_x = KineticEnergy::get_speed_x(energy);
 
-        // set max bounces depending on stick
-        let max_bounces = if stick_y > 0.5 { 1 } else { 2 };
+        let bounce_y = 1.5;
+        sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, current_speed_x, bounce_y);
+        
+        // Increment the bounce counter
+        //WorkModule::inc_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_CUSTOMIZE_NO);
 
-        // 1. Changed the limit to 3
-        if bounce_count >= max_bounces {
-            notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
-            macros::EFFECT(weapon, Hash40::new("sys_erace_smoke"), Hash40::new("top"), 0, -3.5, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
-            weapon.pop_lua_stack(1);
-            return 0.into();
-        } else {
-            let lr = PostureModule::lr(weapon.module_accessor);
-            let bounce_x = 1.2 * lr;
-            let bounce_y = 1.5;
 
-            weapon.clear_lua_stack();
-            sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, bounce_x, bounce_y);
-            sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, bounce_x, bounce_y);
-            
-            // 2. Add this line to increase the bounce count
-            WorkModule::inc_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_CUSTOMIZE_NO);
+        // Bounce effect
+        macros::PLAY_SE(weapon, Hash40::new("se_luigi_special_n02"));
+        macros::FOOT_EFFECT(weapon, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, -3.5, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
 
-            // Bounce effect
-            macros::PLAY_SE(weapon, Hash40::new("se_luigi_special_n02"));
-            macros::FOOT_EFFECT(weapon, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, -3.5, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
-
-            WorkModule::set_int(weapon.module_accessor, bounce_count + 1, *WEAPON_INSTANCE_WORK_ID_INT_CUSTOMIZE_NO);
+        //WorkModule::set_int(weapon.module_accessor, bounce_count + 1, *WEAPON_INSTANCE_WORK_ID_INT_CUSTOMIZE_NO);
         }
+    if life <= 0 {
+        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+        macros::EFFECT(weapon, Hash40::new("sys_erace_smoke"), Hash40::new("top"), 0, -3.5, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+        weapon.pop_lua_stack(1);
+        return 0.into();
     }
     0.into()
 }
+
 
 pub fn install() {
     Agent::new("luigi_fireball")

@@ -218,15 +218,15 @@ unsafe extern "C" fn expression_finalair(agent: &mut L2CAgentBase) {
 // pub fn install() {
 //     Agent::new("luigi")
 //     .set_costume([50, 51, 52, 53, 54, 55, 56, 57].to_vec())
-//         // .game_acmd("game_finalstart_luigid", game_final, Priority::Low) 
-//         // .sound_acmd("sound_finalstart_luigid", sound_final, Priority::Low)  
-//         // .effect_acmd("effect_finalstart_luigid", effect_final, Priority::Low)  
-//         // .expression_acmd("expression_finalstart_luigid", expression_final, Priority::Low)
+//         // .game_acmd("game_finalstart", game_final, Priority::Low) 
+//         // .sound_acmd("sound_finalstart", sound_final, Priority::Low)  
+//         // .effect_acmd("effect_finalstart", effect_final, Priority::Low)  
+//         // .expression_acmd("expression_finalstart", expression_final, Priority::Low)
 
-//         // .game_acmd("game_finalairstart_luigid", game_finalair, Priority::Low) 
-//         // .sound_acmd("sound_finalairstart_luigid", sound_finalair, Priority::Low)  
-//         // .effect_acmd("effect_finalairstart_luigid", effect_finalair, Priority::Low)  
-//         // .expression_acmd("expression_finalairstart_luigid", expression_finalair, Priority::Low)
+//         // .game_acmd("game_finalairstart", game_finalair, Priority::Low) 
+//         // .sound_acmd("sound_finalairstart", sound_finalair, Priority::Low)  
+//         // .effect_acmd("effect_finalairstart", effect_finalair, Priority::Low)  
+//         // .expression_acmd("expression_finalairstart", expression_finalair, Priority::Low)
 
 //         .install();
 // }
